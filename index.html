@@ -8,7 +8,6 @@
     <meta name="apple-mobile-web-app-title" content="Nova">
     <meta name="theme-color" content="#0A0A0B">
     <title>Nova - Muscle Builder</title>
-    <link rel="manifest" href="data:application/json,{}">
 
     <style>
         :root {
@@ -16,7 +15,6 @@
             --bg-secondary: #111113;
             --bg-card: #1A1A1D;
             --bg-card-hover: #222226;
-            --bg-elevated: #242428;
             --text-primary: #FFFFFF;
             --text-secondary: #98989E;
             --text-tertiary: #636368;
@@ -33,7 +31,6 @@
             --radius-md: 14px;
             --radius-lg: 20px;
             --radius-xl: 28px;
-            --radius-2xl: 36px;
             --safe-bottom: env(safe-area-inset-bottom, 20px);
             --safe-top: env(safe-area-inset-top, 0px);
         }
@@ -48,15 +45,13 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        html,
-        body {
+        html, body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', sans-serif;
-            background: #000;
+            background: var(--bg-primary);
             color: var(--text-primary);
             height: 100vh;
             height: 100dvh;
             overflow: hidden;
-            background: var(--bg-primary);
             touch-action: manipulation;
             -webkit-overflow-scrolling: touch;
             position: fixed;
@@ -75,22 +70,6 @@
             overflow: hidden;
         }
 
-        /* Status Bar */
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: calc(12px + var(--safe-top)) 20px 8px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-primary);
-            z-index: 100;
-            background: var(--bg-primary);
-            letter-spacing: 0.3px;
-            flex-shrink: 0;
-        }
-
-        /* Main Content */
         .main-content {
             flex: 1;
             overflow-y: auto;
@@ -101,343 +80,40 @@
             padding-bottom: 100px;
             scrollbar-width: none;
             overscroll-behavior: contain;
+            padding-top: var(--safe-top);
         }
-        .main-content::-webkit-scrollbar {
-            display: none;
-        }
+        .main-content::-webkit-scrollbar { display: none; }
 
-        /* Screens */
         .screen {
             display: none;
             animation: fadeIn 0.3s ease;
             min-height: 100%;
             padding-bottom: 20px;
         }
-        .screen.active {
-            display: block;
-        }
+        .screen.active { display: block; }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         @keyframes bounceIn {
-            0% {
-                transform: scale(0.3);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
         }
         @keyframes confettiFall {
-            0% {
-                transform: translateY(-10vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(105vh) rotate(900deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(105vh) rotate(900deg); opacity: 0; }
         }
         @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
-        @keyframes slideDown {
-            from {
-                transform: translateY(-30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        @keyframes scaleUp {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        @keyframes floatUp {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-6px);
-            }
-        }
-
-        /* Onboarding - Full Screen Premium */
-        .onboarding-container {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-primary);
-            z-index: 200;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .onboarding-container.hidden {
-            display: none;
-        }
-        .onboarding-inner {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: calc(60px + var(--safe-top)) 24px calc(40px + var(--safe-bottom));
-            max-width: 500px;
-            margin: 0 auto;
-            width: 100%;
-        }
-        .onboarding-header {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: slideDown 0.6s ease;
-        }
-        .onboarding-logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #1a3a1a, #0d260d);
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            margin: 0 auto 20px;
-            box-shadow: 0 20px 50px rgba(52, 199, 89, 0.15);
-            animation: floatUp 3s ease-in-out infinite;
-        }
-        .onboarding-title {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 6px;
-            background: linear-gradient(135deg, #fff, #ccc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .onboarding-subtitle {
-            font-size: 15px;
-            color: var(--text-secondary);
-            font-weight: 400;
-            letter-spacing: 0.2px;
-        }
-
-        /* Onboarding Steps */
-        .onboarding-steps {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .onboarding-step {
-            animation: slideDown 0.5s ease;
-        }
-        .step-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-        .step-value-display {
-            text-align: center;
-            font-size: 48px;
-            font-weight: 800;
-            letter-spacing: -2px;
-            margin-bottom: 4px;
-            font-variant-numeric: tabular-nums;
-            font-family: 'SF Mono', 'Menlo', monospace;
-            transition: all 0.3s ease;
-        }
-        .step-unit {
-            text-align: center;
-            font-size: 14px;
-            color: var(--text-tertiary);
-            margin-bottom: 20px;
-        }
-
-        /* Custom Slider */
-        .slider-container {
-            position: relative;
-            width: 100%;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 8px;
-        }
-        .slider-track {
-            position: relative;
-            width: 80%;
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-        }
-        .slider-fill {
-            position: absolute;
-            height: 100%;
-            background: var(--accent);
-            border-radius: 2px;
-            transition: width 0.1s ease;
-            box-shadow: 0 0 10px var(--accent-glow);
-        }
-        .slider-thumb {
-            position: absolute;
-            top: 50%;
-            width: 32px;
-            height: 32px;
-            background: #fff;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 0 4px var(--accent-dim);
-            transition: box-shadow 0.2s ease;
-            touch-action: none;
-            z-index: 2;
-        }
-        .slider-thumb:active {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 8px var(--accent-dim);
-        }
-        .slider-labels {
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
-            margin: 4px auto 0;
-            font-size: 10px;
-            color: var(--text-tertiary);
-            font-weight: 500;
-        }
-
-        /* Goal Cards */
-        .goal-cards-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 8px;
-        }
-        .goal-card {
-            background: var(--bg-card);
-            border: 2px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 20px 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .goal-card:active {
-            transform: scale(0.95);
-        }
-        .goal-card.selected {
-            border-color: var(--accent);
-            background: rgba(52, 199, 89, 0.08);
-            box-shadow: 0 0 30px var(--accent-dim), inset 0 0 30px rgba(52, 199, 89, 0.03);
-            animation: scaleUp 0.3s ease;
-        }
-        .goal-card.selected::after {
-            content: '✓';
-            position: absolute;
-            top: 10px;
-            right: 12px;
-            width: 24px;
-            height: 24px;
-            background: var(--accent);
-            color: #000;
-            border-radius: 50%;
-            font-size: 13px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: bounceIn 0.4s ease;
-        }
-        .goal-card-emoji {
-            font-size: 36px;
-            margin-bottom: 8px;
-            display: block;
-        }
-        .goal-card-title {
-            font-weight: 700;
-            font-size: 14px;
-            letter-spacing: -0.2px;
-        }
-        .goal-card-desc {
-            font-size: 10px;
-            color: var(--text-tertiary);
-            margin-top: 3px;
-        }
-
-        /* Buttons */
-        .onboarding-btn {
-            width: 100%;
-            background: var(--accent);
-            color: #000;
-            border: none;
-            padding: 18px;
-            border-radius: 30px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.2s ease;
-            letter-spacing: 0.3px;
-            font-family: inherit;
-            box-shadow: 0 8px 30px rgba(52, 199, 89, 0.25);
-        }
-        .onboarding-btn:active {
-            transform: scale(0.96);
-            filter: brightness(1.15);
-        }
-        .onboarding-btn.secondary {
-            background: transparent;
-            border: 2px solid var(--border);
-            color: var(--text-primary);
-            box-shadow: none;
-            margin-top: 8px;
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
         }
 
         /* Bottom Nav */
         .bottom-nav {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: 0; left: 0; right: 0;
             background: rgba(17, 17, 19, 0.9);
             border-top: 1px solid var(--border);
             display: flex;
@@ -475,9 +151,7 @@
             font-size: 20px;
             transition: transform 0.15s ease;
         }
-        .nav-btn:active .nav-emoji {
-            transform: scale(0.8);
-        }
+        .nav-btn:active .nav-emoji { transform: scale(0.8); }
         .nav-btn.active::after {
             content: '';
             position: absolute;
@@ -511,7 +185,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 4px 0 12px;
+            margin: 8px 0 12px;
             position: relative;
         }
         .ring-wrapper {
@@ -539,8 +213,7 @@
         }
         .ring-center {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
         }
@@ -577,9 +250,7 @@
             white-space: nowrap;
             z-index: 3;
         }
-        .goal-badge.show {
-            display: block;
-        }
+        .goal-badge.show { display: block; }
 
         /* Quick Add */
         .quick-add-row {
@@ -590,9 +261,7 @@
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
         }
-        .quick-add-row::-webkit-scrollbar {
-            display: none;
-        }
+        .quick-add-row::-webkit-scrollbar { display: none; }
         .quick-add-btn {
             flex-shrink: 0;
             background: var(--bg-card);
@@ -655,11 +324,8 @@
             align-items: center;
             padding: 14px 0;
             border-bottom: 1px solid var(--border);
-            cursor: pointer;
         }
-        .food-item:last-child {
-            border-bottom: none;
-        }
+        .food-item:last-child { border-bottom: none; }
         .food-name {
             font-weight: 600;
             font-size: 14px;
@@ -675,40 +341,34 @@
             cursor: pointer;
             opacity: 0.6;
         }
+        .food-delete:active { opacity: 1; }
 
-        /* Coach */
-        .coach-msg {
+        /* Saved Meals */
+        .saved-meal-card {
             background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            margin-bottom: 10px;
             border: 1px solid var(--border);
-        }
-        .coach-action {
-            display: inline-block;
-            background: var(--purple);
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-bottom: 8px;
             cursor: pointer;
-            margin-top: 8px;
-            font-family: inherit;
-            border: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.15s;
         }
-        .coach-action:active {
-            transform: scale(0.94);
-            filter: brightness(1.2);
+        .saved-meal-card:active {
+            transform: scale(0.97);
+            border-color: var(--accent);
+            background: var(--accent-dim);
         }
 
         /* Toast */
         .toast {
             position: fixed;
-            top: 60px;
+            top: 50px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--bg-elevated);
+            background: var(--bg-elevated, #242428);
             color: #fff;
             font-weight: 600;
             padding: 12px 22px;
@@ -717,7 +377,7 @@
             font-size: 13px;
             animation: bounceIn 0.4s ease;
             pointer-events: none;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
             border: 1px solid var(--border);
             white-space: nowrap;
             letter-spacing: 0.2px;
@@ -727,15 +387,14 @@
         .sheet-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0,0,0,0.7);
             z-index: 150;
             display: none;
             align-items: flex-end;
             backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
         }
-        .sheet-overlay.show {
-            display: flex;
-        }
+        .sheet-overlay.show { display: flex; }
         .sheet {
             background: var(--bg-secondary);
             width: 100%;
@@ -766,10 +425,18 @@
             margin-bottom: 10px;
             outline: none;
             font-family: inherit;
-            text-align: center;
         }
         .sheet-input:focus {
             border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+        .sheet-input-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            display: block;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .sheet-btn {
             width: 100%;
@@ -784,17 +451,20 @@
             font-family: inherit;
             margin-top: 6px;
         }
-        .sheet-btn:active {
-            transform: scale(0.96);
-        }
-        .sheet-btn.red {
-            background: var(--red);
-            color: #fff;
-        }
+        .sheet-btn:active { transform: scale(0.96); }
+        .sheet-btn.red { background: var(--red); color: #fff; }
         .sheet-btn.secondary {
             background: transparent;
             border: 1.5px solid var(--border);
             color: #fff;
+        }
+        .sheet-close {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 6px;
         }
 
         /* Confetti */
@@ -810,60 +480,51 @@
             animation: confettiFall 3s ease-in forwards;
         }
 
-        /* Install banner */
-        .install-banner {
-            background: var(--accent);
-            color: #000;
+        /* Common Foods Grid */
+        .common-foods-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .common-food-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px;
             text-align: center;
-            padding: 12px 16px;
-            font-weight: 700;
-            font-size: 13px;
             cursor: pointer;
-            display: none;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            letter-spacing: 0.3px;
+            transition: all 0.15s;
         }
-        .install-banner.show {
+        .common-food-item:active {
+            transform: scale(0.95);
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
+        .common-food-emoji {
+            font-size: 28px;
             display: block;
+            margin-bottom: 4px;
         }
-
-        @media (min-width: 500px) {
-            .ring-wrapper {
-                width: 220px;
-                height: 220px;
-            }
-            .ring-svg {
-                width: 220px;
-                height: 220px;
-            }
-            .ring-calories {
-                font-size: 42px;
-            }
+        .common-food-name {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .common-food-cals {
+            font-size: 11px;
+            color: var(--orange);
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
     <div id="app">
-        <!-- Install Banner -->
-        <div class="install-banner" id="installBanner" onclick="installApp()">
-            📲 Tap to install Nova on your home screen
-        </div>
-
-        <!-- Status Bar -->
-        <div class="status-bar">
-            <span id="statusTime">9:41</span>
-            <span>🔋</span>
-        </div>
-
-        <!-- Main Content -->
         <div class="main-content" id="mainContent">
 
             <!-- HOME SCREEN -->
             <div class="screen active" id="homeScreen">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;padding-top:10px;">
                     <div>
                         <div style="font-size:26px;font-weight:800;letter-spacing:-0.5px;">Let's build, <span id="displayName">Dylan</span> 👋</div>
                         <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">
@@ -879,15 +540,14 @@
                         <svg class="ring-svg" viewBox="0 0 200 200">
                             <circle class="ring-bg" cx="100" cy="100" r="88"/>
                             <circle class="ring-progress" id="ringProgress" cx="100" cy="100" r="88"
-                            stroke-dasharray="552.92"
-                            stroke-dashoffset="552.92"/>
+                            stroke-dasharray="552.92" stroke-dashoffset="552.92"/>
                         </svg>
                         <div class="ring-center">
                             <div class="ring-calories" id="currentCals">0</div>
                             <div class="ring-goal">/ <span id="calGoal">3200</span> kcal</div>
-                            <div class="ring-label">consumed</div>
+                            <div class="ring-label">consumed today</div>
                         </div>
-                        <div class="goal-badge" id="goalBadge">🎯 Goal Complete!</div>
+                        <div class="goal-badge" id="goalBadge">🎯 Daily Goal Hit!</div>
                     </div>
                 </div>
 
@@ -910,23 +570,28 @@
                 <div class="quick-add-row">
                     <button class="quick-add-btn" onclick="quickAdd(500)">+500 kcal</button>
                     <button class="quick-add-btn" onclick="quickAdd(300)">+300 kcal</button>
-                    <button class="quick-add-btn" onclick="quickAdd(160, '🥤 Protein Shake')">+Protein</button>
+                    <button class="quick-add-btn" onclick="quickAdd(160, '🥤 Protein Shake')">+Protein Shake</button>
                     <button class="quick-add-btn" onclick="openCustomAdd()">+Custom</button>
                 </div>
                 <div style="margin-top:10px;cursor:pointer;color:var(--blue);font-size:12px;font-weight:600;" onclick="toggleWater()">
-                    <span id="waterStatus">💧 Tap to log water</span>
+                    <span id="waterStatus">💧 Tap to log water intake</span>
                 </div>
             </div>
 
             <!-- FOOD SCREEN -->
             <div class="screen" id="foodScreen">
-                <div class="section-title">📷 AI Scanner</div>
-                <button style="width:100%;background:linear-gradient(135deg,#8B5CF6,#6D28D9);color:#fff;border:none;padding:20px;border-radius:var(--radius-lg);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;" onclick="simulateScan()">
-                    Scan Your Meal
-                </button>
+                <div class="section-title">🔍 Common Foods</div>
+                <div class="common-foods-grid" id="commonFoods"></div>
+
+                <div class="section-title">⭐ Saved Meals</div>
+                <div id="savedMealsList">
+                    <div style="color:var(--text-tertiary);font-size:13px;padding:10px 0;">No saved meals yet. Log food to save it!</div>
+                </div>
+
                 <div class="section-title">🍽️ Today's Log</div>
-                <div id="foodLog"><div style="color:var(--text-tertiary);text-align:center;padding:30px;">No meals yet</div></div>
+                <div id="foodLog"><div style="color:var(--text-tertiary);text-align:center;padding:20px;">No meals logged yet</div></div>
                 <div id="foodTotals" style="text-align:center;margin-top:10px;color:var(--text-secondary);font-size:13px;"></div>
+
                 <button style="width:100%;background:transparent;border:2px dashed var(--border);color:var(--text-secondary);padding:14px;border-radius:var(--radius-lg);margin-top:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;" onclick="openCustomAdd()">
                     + Add Food Manually
                 </button>
@@ -954,13 +619,33 @@
                 <button class="sheet-btn red" style="margin-top:8px;" onclick="resetAllData()">🗑️ Reset All Data</button>
             </div>
 
-            <!-- COACH SCREEN -->
-            <div class="screen" id="coachScreen">
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
-                    <span style="font-size:36px;">🧠</span>
-                    <div><div style="font-weight:700;font-size:18px;">Coach Nova</div><div style="font-size:11px;color:var(--text-secondary);">Your AI Companion</div></div>
+            <!-- PROFILE SCREEN -->
+            <div class="screen" id="profileScreen">
+                <div class="section-title">🏆 Achievements</div>
+                <div class="card">
+                    <div style="text-align:center;font-size:40px;margin-bottom:8px;">💪</div>
+                    <div style="text-align:center;font-weight:700;font-size:18px;" id="profileLevel">Level 1: Beginner</div>
+                    <div style="background:var(--bg-card-hover);border-radius:20px;height:8px;margin:12px 0;overflow:hidden;">
+                        <div style="background:var(--accent);height:100%;border-radius:20px;transition:width 0.5s ease;" id="xpBar" style="width:0%;"></div>
+                    </div>
+                    <div style="text-align:center;font-size:11px;color:var(--text-tertiary);"><span id="xpText">0</span> XP</div>
                 </div>
-                <div id="coachMessages"></div>
+                <div id="achievementsList"></div>
+                <div class="section-title">📊 Stats</div>
+                <div class="card">
+                    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+                        <span style="color:var(--text-secondary);">Total Meals Logged</span>
+                        <span style="font-weight:700;" id="totalMealsStat">0</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+                        <span style="color:var(--text-secondary);">Best Streak</span>
+                        <span style="font-weight:700;" id="bestStreakStat">0 days</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:8px 0;">
+                        <span style="color:var(--text-secondary);">Current Phase</span>
+                        <span style="font-weight:700;color:var(--accent);" id="phaseStat">Bulking</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -969,155 +654,59 @@
             <button class="nav-btn active" data-screen="homeScreen" onclick="navTo('homeScreen', this)"><span class="nav-emoji">🏠</span>Home</button>
             <button class="nav-btn" data-screen="foodScreen" onclick="navTo('foodScreen', this)"><span class="nav-emoji">🍽️</span>Food</button>
             <button class="nav-btn" data-screen="progressScreen" onclick="navTo('progressScreen', this)"><span class="nav-emoji">📈</span>Progress</button>
-            <button class="nav-btn" data-screen="coachScreen" onclick="navTo('coachScreen', this)"><span class="nav-emoji">🧠</span>Coach</button>
+            <button class="nav-btn" data-screen="profileScreen" onclick="navTo('profileScreen', this)"><span class="nav-emoji">👤</span>Profile</button>
         </nav>
-    </div>
-
-    <!-- Onboarding Overlay -->
-    <div class="onboarding-container" id="onboarding">
-        <div class="onboarding-inner">
-            <div class="onboarding-header">
-                <div class="onboarding-logo">💪</div>
-                <div class="onboarding-title">Welcome to Nova</div>
-                <div class="onboarding-subtitle">Your AI Muscle Building Companion</div>
-            </div>
-
-            <div class="onboarding-steps" id="onboardingSteps">
-                <!-- Step 1: Name -->
-                <div class="onboarding-step" id="stepName">
-                    <div class="step-label">Your Name</div>
-                    <div class="step-value-display" id="namePreview">Dylan</div>
-                    <div class="step-unit">Let's make this personal</div>
-                    <input type="text" class="sheet-input" id="onboardName" value="Dylan" placeholder="Your name" maxlength="20" style="text-align:center;font-size:20px;font-weight:600;" oninput="updateNamePreview()">
-                </div>
-
-                <!-- Step 2: Weight -->
-                <div class="onboarding-step" id="stepWeight" style="display:none;">
-                    <div class="step-label">Current Weight</div>
-                    <div class="step-value-display" id="weightPreview">68</div>
-                    <div class="step-unit">kg</div>
-                    <div class="slider-container">
-                        <div class="slider-track" id="weightTrack">
-                            <div class="slider-fill" id="weightFill" style="width:40%;"></div>
-                            <div class="slider-thumb" id="weightThumb" style="left:40%;"></div>
-                        </div>
-                    </div>
-                    <div class="slider-labels">
-                        <span>40</span><span>60</span><span>80</span><span>100</span><span>120</span>
-                    </div>
-                </div>
-
-                <!-- Step 3: Goal Weight -->
-                <div class="onboarding-step" id="stepGoal" style="display:none;">
-                    <div class="step-label">Goal Weight</div>
-                    <div class="step-value-display" id="goalPreview">75</div>
-                    <div class="step-unit">kg • <span id="weightDiff">+7kg muscle gain</span></div>
-                    <div class="slider-container">
-                        <div class="slider-track" id="goalTrack">
-                            <div class="slider-fill" id="goalFill" style="width:50%;"></div>
-                            <div class="slider-thumb" id="goalThumb" style="left:50%;"></div>
-                        </div>
-                    </div>
-                    <div class="slider-labels">
-                        <span>50</span><span>65</span><span>80</span><span>95</span><span>110</span>
-                    </div>
-                </div>
-
-                <!-- Step 4: Goal Type -->
-                <div class="onboarding-step" id="stepGoalType" style="display:none;">
-                    <div class="step-label">Your Goal</div>
-                    <div class="step-value-display" style="font-size:24px;">What's your focus?</div>
-                    <div class="step-unit">Choose your phase</div>
-                    <div class="goal-cards-grid" id="goalCardsGrid">
-                        <div class="goal-card selected" data-goal="bulk">
-                            <span class="goal-card-emoji">💪</span>
-                            <div class="goal-card-title">Build Muscle</div>
-                            <div class="goal-card-desc">Calorie surplus + protein focus</div>
-                        </div>
-                        <div class="goal-card" data-goal="gain">
-                            <span class="goal-card-emoji">⚖️</span>
-                            <div class="goal-card-title">Gain Weight</div>
-                            <div class="goal-card-desc">Overall mass increase</div>
-                        </div>
-                        <div class="goal-card" data-goal="lean">
-                            <span class="goal-card-emoji">🔥</span>
-                            <div class="goal-card-title">Lean Bulk</div>
-                            <div class="goal-card-desc">Muscle with minimal fat</div>
-                        </div>
-                        <div class="goal-card" data-goal="maintain">
-                            <span class="goal-card-emoji">🏃</span>
-                            <div class="goal-card-title">Maintain</div>
-                            <div class="goal-card-desc">Keep current physique</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation Buttons -->
-            <div id="onboardingNav">
-                <button class="onboarding-btn" id="onboardNext" onclick="nextOnboardingStep()">Continue</button>
-                <button class="onboarding-btn secondary" id="onboardBack" style="display:none;" onclick="prevOnboardingStep()">Back</button>
-            </div>
-
-            <!-- Step Indicators -->
-            <div style="display:flex;justify-content:center;gap:8px;margin-top:20px;" id="stepDots">
-                <div style="width:8px;height:8px;border-radius:50%;background:var(--accent);transition:all 0.3s;" id="dot1"></div>
-                <div style="width:8px;height:8px;border-radius:50%;background:var(--border);transition:all 0.3s;" id="dot2"></div>
-                <div style="width:8px;height:8px;border-radius:50%;background:var(--border);transition:all 0.3s;" id="dot3"></div>
-                <div style="width:8px;height:8px;border-radius:50%;background:var(--border);transition:all 0.3s;" id="dot4"></div>
-            </div>
-        </div>
     </div>
 
     <!-- Confetti -->
     <div class="confetti-container" id="confettiContainer"></div>
     <!-- Toast -->
     <div id="toastContainer"></div>
+
     <!-- Custom Add Sheet -->
     <div class="sheet-overlay" id="customAddSheet">
         <div class="sheet">
             <div class="sheet-handle" onclick="closeSheet('customAddSheet')"></div>
             <div style="font-weight:700;font-size:18px;text-align:center;margin-bottom:16px;">✏️ Add Food</div>
-            <input type="text" class="sheet-input" id="customFoodName" placeholder="Food name">
-            <input type="number" class="sheet-input" id="customFoodCals" placeholder="Calories">
+            <label class="sheet-input-label">Food Name</label>
+            <input type="text" class="sheet-input" id="customFoodName" placeholder="e.g. Chicken & Rice">
+            <label class="sheet-input-label">Calories</label>
+            <input type="number" class="sheet-input" id="customFoodCals" placeholder="e.g. 550">
+            <label class="sheet-input-label">Protein (grams, optional)</label>
+            <input type="number" class="sheet-input" id="customFoodProtein" placeholder="e.g. 45">
+            <div style="display:flex;align-items:center;gap:8px;margin:8px 0;">
+                <input type="checkbox" id="saveAsMeal" style="width:20px;height:20px;accent-color:var(--accent);">
+                <label for="saveAsMeal" style="font-size:13px;color:var(--text-secondary);">Save as recurring meal</label>
+            </div>
             <button class="sheet-btn" onclick="addCustomFood()">Add Food</button>
-            <div style="text-align:center;color:var(--text-secondary);margin-top:10px;cursor:pointer;" onclick="closeSheet('customAddSheet')">Cancel</div>
+            <div class="sheet-close" onclick="closeSheet('customAddSheet')">Cancel</div>
         </div>
     </div>
+
     <!-- Settings Sheet -->
     <div class="sheet-overlay" id="settingsSheet">
         <div class="sheet">
             <div class="sheet-handle" onclick="closeSheet('settingsSheet')"></div>
             <div style="font-weight:700;font-size:18px;text-align:center;margin-bottom:16px;">⚙️ Settings</div>
-            <label style="font-size:12px;color:var(--text-secondary);">Daily Calorie Goal</label>
+            <label class="sheet-input-label">Daily Calorie Goal</label>
             <input type="number" class="sheet-input" id="settingsCals" placeholder="3200">
-            <label style="font-size:12px;color:var(--text-secondary);">Daily Protein Goal (g)</label>
+            <label class="sheet-input-label">Daily Protein Goal (g)</label>
             <input type="number" class="sheet-input" id="settingsProtein" placeholder="160">
-            <label style="font-size:12px;color:var(--text-secondary);">Goal Weight (kg)</label>
+            <label class="sheet-input-label">Goal Weight (kg)</label>
             <input type="number" class="sheet-input" id="settingsGoalWeight" placeholder="75">
             <button class="sheet-btn" onclick="saveSettings()">Save Settings</button>
-            <div style="text-align:center;color:var(--text-secondary);margin-top:10px;cursor:pointer;" onclick="closeSheet('settingsSheet')">Cancel</div>
-        </div>
-    </div>
-    <!-- Scan Result Sheet -->
-    <div class="sheet-overlay" id="scanSheet">
-        <div class="sheet">
-            <div class="sheet-handle" onclick="closeSheet('scanSheet')"></div>
-            <div style="text-align:center;font-weight:700;font-size:18px;margin-bottom:12px;">📷 AI Scan Result</div>
-            <div id="scanContent" style="text-align:center;"></div>
-            <div style="text-align:center;color:var(--text-secondary);margin-top:10px;cursor:pointer;" onclick="closeSheet('scanSheet')">Cancel</div>
+            <div class="sheet-close" onclick="closeSheet('settingsSheet')">Cancel</div>
         </div>
     </div>
 
     <script>
         // ============ DATABASE ============
-        const DB_NAME = 'nova-fitness-v2';
-        const DB_VERSION = 1;
+        const DB_NAME = 'nova-fitness-v3';
         let db;
 
         function openDB() {
             return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                const request = indexedDB.open(DB_NAME, 2);
                 request.onupgradeneeded = (e) => {
                     const db = e.target.result;
                     if (!db.objectStoreNames.contains('state')) db.createObjectStore('state', { keyPath: 'id' });
@@ -1129,9 +718,11 @@
                         const ws = db.createObjectStore('weights', { keyPath: 'id', autoIncrement: true });
                         ws.createIndex('date', 'date', { unique: false });
                     }
+                    if (!db.objectStoreNames.contains('savedMeals')) {
+                        db.createObjectStore('savedMeals', { keyPath: 'id', autoIncrement: true });
+                    }
                 };
-                request.onsuccess = (e) => { db = e.target.result;
-                    resolve(db); };
+                request.onsuccess = (e) => { db = e.target.result; resolve(db); };
                 request.onerror = () => reject(request.error);
             });
         }
@@ -1176,6 +767,40 @@
             return new Promise(r => { req.onsuccess = () => r(req.result || []); });
         }
 
+        async function loadSavedMeals() {
+            const tx = db.transaction('savedMeals', 'readonly');
+            const req = tx.objectStore('savedMeals').getAll();
+            return new Promise(r => { req.onsuccess = () => r(req.result || []); });
+        }
+
+        async function saveNewMealTemplate(meal) {
+            const tx = db.transaction('savedMeals', 'readwrite');
+            tx.objectStore('savedMeals').add(meal);
+            return new Promise(r => { tx.oncomplete = r; });
+        }
+
+        async function deleteSavedMeal(id) {
+            const tx = db.transaction('savedMeals', 'readwrite');
+            tx.objectStore('savedMeals').delete(id);
+            return new Promise(r => { tx.oncomplete = r; });
+        }
+
+        // ============ COMMON FOODS DATABASE ============
+        const commonFoods = [
+            { name: 'Chicken Breast (200g)', cals: 330, protein: 62, emoji: '🍗' },
+            { name: 'White Rice (1 cup)', cals: 205, protein: 4, emoji: '🍚' },
+            { name: 'Protein Shake', cals: 160, protein: 30, emoji: '🥤' },
+            { name: 'Peanut Butter (2 tbsp)', cals: 190, protein: 7, emoji: '🥜' },
+            { name: 'Whole Eggs (x3)', cals: 210, protein: 18, emoji: '🥚' },
+            { name: 'Oatmeal (1 cup)', cals: 300, protein: 10, emoji: '🥣' },
+            { name: 'Salmon Fillet', cals: 367, protein: 40, emoji: '🐟' },
+            { name: 'Sweet Potato', cals: 180, protein: 4, emoji: '🍠' },
+            { name: 'Greek Yogurt', cals: 130, protein: 18, emoji: '🥛' },
+            { name: 'Banana', cals: 105, protein: 1, emoji: '🍌' },
+            { name: 'Beef Steak (200g)', cals: 450, protein: 52, emoji: '🥩' },
+            { name: 'Pasta (1 cup)', cals: 220, protein: 8, emoji: '🍝' },
+        ];
+
         // ============ STATE ============
         const today = () => new Date().toISOString().split('T')[0];
         const defaultState = {
@@ -1190,6 +815,7 @@
             mealsLogged: 0,
             totalMealsEver: 0,
             streak: 0,
+            bestStreak: 0,
             lastActiveDate: today(),
             xp: 0,
             level: 1,
@@ -1199,10 +825,7 @@
         let state = { ...defaultState };
         let todaysMeals = [];
         let weightHistory = [];
-        let onboardingStep = 0;
-        let onboardWeight = 68;
-        let onboardGoal = 75;
-        let onboardGoalType = 'bulk';
+        let savedMeals = [];
 
         // ============ INIT ============
         async function init() {
@@ -1210,17 +833,17 @@
             const saved = await loadState();
             if (saved && saved.onboardingComplete) {
                 state = { ...defaultState, ...saved };
-                document.getElementById('onboarding').classList.add('hidden');
+                document.getElementById('onboarding')?.classList.add('hidden');
             } else if (saved) {
                 state = { ...defaultState, ...saved };
             }
 
             if (state.lastActiveDate !== today()) {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
+                const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
                 const yStr = yesterday.toISOString().split('T')[0];
                 if (state.lastActiveDate === yStr && state.caloriesConsumed >= state.calorieGoal * 0.5) {
                     state.streak++;
+                    if (state.streak > state.bestStreak) state.bestStreak = state.streak;
                 } else if (state.lastActiveDate !== today()) {
                     state.streak = 0;
                 }
@@ -1241,154 +864,36 @@
             weightHistory = await loadWeights();
             if (weightHistory.length > 0) state.currentWeight = weightHistory[weightHistory.length - 1].weight;
 
+            savedMeals = await loadSavedMeals();
+
             await saveState(state);
             updateAllUI();
-            updateStatusTime();
-            setInterval(updateStatusTime, 30000);
-            checkInstallBanner();
+            renderCommonFoods();
+            renderSavedMeals();
 
+            // Show onboarding if needed
             if (!state.onboardingComplete) {
-                document.getElementById('onboarding').classList.remove('hidden');
-                showOnboardingStep(0);
+                showOnboarding();
             }
-
-            // Setup sliders
-            setupSlider('weightTrack', 'weightThumb', 'weightFill', 'weightPreview', 40, 120, (v) => {
-                onboardWeight = v;
-                updateWeightDiff();
-            }, 68);
-            setupSlider('goalTrack', 'goalThumb', 'goalFill', 'goalPreview', 50, 110, (v) => {
-                onboardGoal = v;
-                updateWeightDiff();
-            }, 75);
-
-            // Goal card clicks
-            document.querySelectorAll('#goalCardsGrid .goal-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    document.querySelectorAll('#goalCardsGrid .goal-card').forEach(c => c.classList.remove(
-                        'selected'));
-                    this.classList.add('selected');
-                    onboardGoalType = this.dataset.goal;
-                });
-            });
         }
 
-        function updateStatusTime() {
-            const now = new Date();
-            document.getElementById('statusTime').textContent =
-                now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-        }
+        function showOnboarding() {
+            const name = prompt('Welcome to Nova! 👋\n\nWhat\'s your name?', 'Dylan') || 'Athlete';
+            const weight = parseFloat(prompt('Current weight (kg)?', '68')) || 68;
+            const goal = parseFloat(prompt('Goal weight (kg)?', '75')) || 75;
+            const goalType = confirm('Are you trying to build muscle?\n\nOK = Build Muscle\nCancel = Other goals') ? 'bulk' : 'maintain';
 
-        // ============ ONBOARDING ============
-        function showOnboardingStep(step) {
-            onboardingStep = step;
-            const steps = ['stepName', 'stepWeight', 'stepGoal', 'stepGoalType'];
-            steps.forEach((id, i) => {
-                document.getElementById(id).style.display = i === step ? 'block' : 'none';
-                document.getElementById(id).style.animation = i === step ? 'slideDown 0.5s ease' : '';
-            });
-
-            // Update dots
-            for (let i = 1; i <= 4; i++) {
-                const dot = document.getElementById('dot' + i);
-                dot.style.background = i <= step + 1 ? 'var(--accent)' : 'var(--border)';
-                dot.style.boxShadow = i <= step + 1 ? '0 0 8px var(--accent-glow)' : 'none';
-            }
-
-            // Update buttons
-            const nextBtn = document.getElementById('onboardNext');
-            const backBtn = document.getElementById('onboardBack');
-
-            if (step === 3) {
-                nextBtn.textContent = '🚀 Start My Journey';
-                nextBtn.onclick = completeOnboarding;
-            } else {
-                nextBtn.textContent = 'Continue';
-                nextBtn.onclick = nextOnboardingStep;
-            }
-
-            backBtn.style.display = step === 0 ? 'none' : 'block';
-            updateWeightDiff();
-        }
-
-        function nextOnboardingStep() {
-            if (onboardingStep < 3) showOnboardingStep(onboardingStep + 1);
-        }
-
-        function prevOnboardingStep() {
-            if (onboardingStep > 0) showOnboardingStep(onboardingStep - 1);
-        }
-
-        function updateNamePreview() {
-            const name = document.getElementById('onboardName').value || 'Athlete';
-            document.getElementById('namePreview').textContent = name;
-        }
-
-        function updateWeightDiff() {
-            const diff = onboardGoal - onboardWeight;
-            const diffText = diff > 0 ? `+${diff}kg muscle gain` : diff < 0 ? `${diff}kg weight loss` : 'Maintain weight';
-            const el = document.getElementById('weightDiff');
-            if (el) el.textContent = diffText;
-            document.getElementById('goalPreview').textContent = onboardGoal;
-        }
-
-        function setupSlider(trackId, thumbId, fillId, previewId, min, max, onChange, initial) {
-            const track = document.getElementById(trackId);
-            const thumb = document.getElementById(thumbId);
-            const fill = document.getElementById(fillId);
-            const preview = document.getElementById(previewId);
-            let isDragging = false;
-
-            function updatePosition(clientX) {
-                const rect = track.getBoundingClientRect();
-                let percent = (clientX - rect.left) / rect.width;
-                percent = Math.max(0, Math.min(1, percent));
-                const value = Math.round(min + percent * (max - min));
-                thumb.style.left = (percent * 100) + '%';
-                fill.style.width = (percent * 100) + '%';
-                preview.textContent = value;
-                if (navigator.vibrate && Math.abs(value - parseInt(preview.dataset.lastVal || '0')) >= 1) {
-                    navigator.vibrate(4);
-                }
-                preview.dataset.lastVal = value;
-                onChange(value);
-            }
-
-            thumb.addEventListener('touchstart', (e) => { isDragging = true;
-                e.preventDefault(); });
-            thumb.addEventListener('mousedown', () => { isDragging = true; });
-            document.addEventListener('touchmove', (e) => {
-                if (isDragging) { updatePosition(e.touches[0].clientX);
-                    e.preventDefault(); }
-            });
-            document.addEventListener('mousemove', (e) => { if (isDragging) updatePosition(e.clientX); });
-            document.addEventListener('touchend', () => { isDragging = false; });
-            document.addEventListener('mouseup', () => { isDragging = false; });
-            track.addEventListener('click', (e) => updatePosition(e.clientX));
-
-            // Set initial
-            const initPercent = (initial - min) / (max - min);
-            thumb.style.left = (initPercent * 100) + '%';
-            fill.style.width = (initPercent * 100) + '%';
-            preview.textContent = initial;
-        }
-
-        async function completeOnboarding() {
-            const name = document.getElementById('onboardName').value.trim() || 'Athlete';
             state.name = name;
-            state.currentWeight = onboardWeight;
-            state.goalWeight = onboardGoal;
-            state.goal = onboardGoalType;
+            state.currentWeight = weight;
+            state.goalWeight = goal;
+            state.goal = goalType;
             state.onboardingComplete = true;
             state.lastActiveDate = today();
+            state.calorieGoal = goalType === 'bulk' ? 3200 : 2500;
 
-            const goalMap = { bulk: 3200, gain: 3200, lean: 2800, maintain: 2500 };
-            state.calorieGoal = goalMap[onboardGoalType] || 3200;
-
-            await saveState(state);
-            document.getElementById('onboarding').classList.add('hidden');
+            saveState(state);
             updateAllUI();
-            showToast('🚀 Journey started! Let\'s build!');
+            showToast('🚀 Welcome, ' + name + '! Let\'s build!');
             spawnConfetti();
         }
 
@@ -1400,30 +905,43 @@
             if (btn) btn.classList.add('active');
             document.getElementById('mainContent').scrollTop = 0;
             if (navigator.vibrate) navigator.vibrate(4);
-            if (screenId === 'coachScreen') updateCoachMessages();
             if (screenId === 'progressScreen') updateWeightHistory();
+            if (screenId === 'foodScreen') { renderCommonFoods(); renderSavedMeals(); }
+            if (screenId === 'profileScreen') updateProfileScreen();
         }
 
         // ============ UI UPDATES ============
         function updateAllUI() {
             document.getElementById('displayName').textContent = state.name;
-            document.getElementById('streakDisplay').textContent = state.streak > 0 ? `🔥 ${state.streak} day streak` :
-                '🕯️ Start your streak';
+            document.getElementById('streakDisplay').textContent = state.streak > 0 ? `🔥 ${state.streak} day streak` : '🕯️ Start logging to build a streak';
             document.getElementById('calGoal').textContent = state.calorieGoal;
             document.getElementById('currWeight').textContent = state.currentWeight;
             document.getElementById('goalWeightDisp').textContent = state.goalWeight;
             const phaseMap = { bulk: '💪 BULKING', gain: '⚖️ GAINING', lean: '🔥 LEAN BULK', maintain: '🏃 MAINTAINING' };
             document.getElementById('phaseBadge').textContent = phaseMap[state.goal] || '💪 BULKING';
+            document.getElementById('phaseStat').textContent = phaseMap[state.goal] || 'Bulking';
             const diff = state.goalWeight - state.currentWeight;
-            const progress = Math.max(0, Math.min(100, Math.round((state.currentWeight - defaultState.currentWeight) / (
-                state.goalWeight - defaultState.currentWeight) * 100)));
-            document.getElementById('progressText').textContent =
-                `${Math.abs(diff).toFixed(1)}kg ${diff>0?'to go':'over goal'} • ${progress}% complete`;
+            const progress = Math.max(0, Math.min(100, Math.round((state.currentWeight - 68) / (state.goalWeight - 68) * 100)));
+            document.getElementById('progressText').textContent = `${Math.abs(diff).toFixed(1)}kg ${diff>0?'to go':'over goal'} • ${progress}% complete`;
+            document.getElementById('totalMealsStat').textContent = state.totalMealsEver;
+            document.getElementById('bestStreakStat').textContent = state.bestStreak + ' days';
+            document.getElementById('xpText').textContent = state.xp;
+            document.getElementById('xpBar').style.width = Math.min(100, (state.xp / (state.level * 200)) * 100) + '%';
+            document.getElementById('profileLevel').textContent = `Level ${state.level}: ${getLevelTitle(state.level)}`;
             updateRing();
             updateGrowthScore();
             updateFoodLog();
-            updateCoachMessages();
             updateWaterDisplay();
+            updateWeightHistory();
+            updateProfileScreen();
+        }
+
+        function getLevelTitle(lvl) {
+            if (lvl >= 10) return 'Elite Builder';
+            if (lvl >= 7) return 'Dedicated Athlete';
+            if (lvl >= 5) return 'Consistent Gainer';
+            if (lvl >= 3) return 'Rising Star';
+            return 'Beginner';
         }
 
         function updateRing() {
@@ -1466,15 +984,49 @@
         }
 
         function updateWaterDisplay() {
-            document.getElementById('waterStatus').textContent = state.waterDone ? '💙 Water logged! Great hydration' :
-                '💧 Tap to log water';
+            document.getElementById('waterStatus').textContent = state.waterDone ? '💙 Water logged! Stay hydrated' : '💧 Tap to log water intake';
         }
 
-        // ============ FOOD ============
-        async function quickAdd(calories, name = 'Quick Add') {
-            const protein = Math.round(calories * 0.06);
-            const meal = { name, calories, protein, date: today(), time: new Date().toLocaleTimeString([], { hour: '2-digit',
-                    minute: '2-digit' }) };
+        // ============ COMMON FOODS ============
+        function renderCommonFoods() {
+            const grid = document.getElementById('commonFoods');
+            grid.innerHTML = commonFoods.map(f => `
+            <div class="common-food-item" onclick="quickAdd(${f.cals}, '${f.name}', ${f.protein})">
+              <span class="common-food-emoji">${f.emoji}</span>
+              <div class="common-food-name">${f.name}</div>
+              <div class="common-food-cals">${f.cals} kcal • ${f.protein}g protein</div>
+            </div>
+          `).join('');
+        }
+
+        function renderSavedMeals() {
+            const container = document.getElementById('savedMealsList');
+            if (savedMeals.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-tertiary);font-size:13px;padding:10px 0;">No saved meals yet. Check "Save as recurring meal" when adding food.</div>';
+                return;
+            }
+            container.innerHTML = savedMeals.map(m => `
+            <div class="saved-meal-card">
+              <div style="flex:1;" onclick="quickAdd(${m.calories}, '${m.name}', ${m.protein||0})">
+                <div style="font-weight:600;font-size:14px;">⭐ ${m.name}</div>
+                <div style="font-size:11px;color:var(--text-tertiary);">${m.calories} kcal • ${m.protein||0}g protein</div>
+              </div>
+              <span style="color:var(--red);padding:8px;cursor:pointer;font-size:16px;" onclick="event.stopPropagation();removeSavedMeal(${m.id})">🗑️</span>
+            </div>
+          `).join('');
+        }
+
+        async function removeSavedMeal(id) {
+            await deleteSavedMeal(id);
+            savedMeals = await loadSavedMeals();
+            renderSavedMeals();
+            showToast('Saved meal removed');
+        }
+
+        // ============ FOOD LOGGING ============
+        async function quickAdd(calories, name = 'Quick Add', protein = 0) {
+            if (!protein) protein = Math.round(calories * 0.06);
+            const meal = { name, calories, protein, date: today(), time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
             todaysMeals.push(meal);
             state.caloriesConsumed += calories;
             state.proteinConsumed += protein;
@@ -1482,10 +1034,12 @@
             state.totalMealsEver++;
             state.xp += 15;
             state.lastActiveDate = today();
-            if (state.xp >= state.level * 200) { state.level++;
+            if (state.xp >= state.level * 200) {
+                state.level++;
                 state.xp = 0;
-                showToast('🎉 Level Up!');
-                spawnConfetti(); }
+                showToast('🎉 Level Up! You\'re now Level ' + state.level + '!');
+                spawnConfetti();
+            }
             await saveMeals(todaysMeals);
             await saveState(state);
             updateAllUI();
@@ -1497,74 +1051,61 @@
             document.getElementById('customAddSheet').classList.add('show');
             document.getElementById('customFoodName').value = '';
             document.getElementById('customFoodCals').value = '';
+            document.getElementById('customFoodProtein').value = '';
+            document.getElementById('saveAsMeal').checked = false;
             document.getElementById('customFoodName').focus();
         }
 
         async function addCustomFood() {
             const name = document.getElementById('customFoodName').value.trim();
             const cals = parseInt(document.getElementById('customFoodCals').value);
-            if (!name || !cals || cals <= 0) { showToast('Enter name and calories'); return; }
+            const protein = parseInt(document.getElementById('customFoodProtein').value) || Math.round(cals * 0.06);
+            const saveIt = document.getElementById('saveAsMeal').checked;
+
+            if (!name || !cals || cals <= 0) {
+                showToast('Please enter name and calories');
+                return;
+            }
+
             closeSheet('customAddSheet');
-            await quickAdd(cals, name);
+
+            if (saveIt) {
+                await saveNewMealTemplate({ name, calories: cals, protein });
+                savedMeals = await loadSavedMeals();
+                renderSavedMeals();
+                showToast('⭐ Meal saved for quick access!');
+            }
+
+            await quickAdd(cals, name, protein);
         }
 
         function closeSheet(id) { document.getElementById(id).classList.remove('show'); }
 
-        function simulateScan() {
-            const meals = [
-                { name: '🍗 Chicken, Rice & Broccoli', cals: 550, protein: 45 },
-                { name: '🥣 Protein Oatmeal', cals: 420, protein: 30 },
-                { name: '🥤 Peanut Butter Smoothie', cals: 600, protein: 25 },
-                { name: '🐟 Salmon & Sweet Potato', cals: 650, protein: 40 },
-                { name: '🥛 Mass Gainer Shake', cals: 800, protein: 50 },
-            ];
-            const meal = meals[Math.floor(Math.random() * meals.length)];
-            document.getElementById('scanContent').innerHTML = `
-            <div style="font-size:50px;margin-bottom:8px;">🔍</div>
-            <div style="font-weight:700;font-size:18px;">${meal.name}</div>
-            <div style="color:var(--orange);font-weight:700;font-size:16px;">~${meal.cals} kcal</div>
-            <div style="color:var(--accent);">~${meal.protein}g protein</div>
-            <button class="sheet-btn" style="margin-top:12px;" onclick="confirmScan(${meal.cals},'${meal.name}',${meal.protein})">✅ Log This</button>`;
-            document.getElementById('scanSheet').classList.add('show');
-            if (navigator.vibrate) navigator.vibrate(20);
-        }
-
-        async function confirmScan(cals, name, protein) {
-            closeSheet('scanSheet');
-            const meal = { name, calories: cals, protein, date: today(), time: new Date().toLocaleTimeString([], { hour: '2-digit',
-                    minute: '2-digit' }) };
-            todaysMeals.push(meal);
-            state.caloriesConsumed += cals;
-            state.proteinConsumed += protein;
-            state.mealsLogged = todaysMeals.length;
-            state.totalMealsEver++;
-            state.xp += 20;
-            state.lastActiveDate = today();
-            await saveMeals(todaysMeals);
-            await saveState(state);
-            updateAllUI();
-            showToast(`✅ ${name} logged!`);
-        }
-
         function updateFoodLog() {
             const log = document.getElementById('foodLog');
             if (todaysMeals.length === 0) {
-                log.innerHTML = '<div style="color:var(--text-tertiary);text-align:center;padding:30px;">No meals yet</div>';
+                log.innerHTML = '<div style="color:var(--text-tertiary);text-align:center;padding:20px;">No meals logged yet</div>';
                 document.getElementById('foodTotals').innerHTML = '';
                 return;
             }
             log.innerHTML = todaysMeals.map((m, i) => `
             <div class="food-item">
-              <div><div class="food-name">${m.name}</div><div style="font-size:10px;color:var(--text-tertiary);">${m.time}</div></div>
+              <div>
+                <div class="food-name">${m.name}</div>
+                <div style="font-size:10px;color:var(--text-tertiary);">${m.time}</div>
+              </div>
               <div style="display:flex;align-items:center;gap:12px;">
-                <div style="text-align:right;"><div class="food-cals">${m.calories} kcal</div><div style="font-size:10px;color:var(--accent);">${m.protein||0}g protein</div></div>
+                <div style="text-align:right;">
+                  <div class="food-cals">${m.calories} kcal</div>
+                  <div style="font-size:10px;color:var(--accent);">${m.protein||0}g protein</div>
+                </div>
                 <span class="food-delete" onclick="deleteMeal(${i})">🗑️</span>
               </div>
-            </div>`).join('');
+            </div>
+          `).join('');
             const tc = todaysMeals.reduce((s, m) => s + m.calories, 0);
             const tp = todaysMeals.reduce((s, m) => s + (m.protein || 0), 0);
-            document.getElementById('foodTotals').innerHTML =
-                `Total: <strong style="color:var(--orange);">${tc} kcal</strong> • <strong style="color:var(--accent);">${tp}g protein</strong>`;
+            document.getElementById('foodTotals').innerHTML = `Total: <strong style="color:var(--orange);">${tc} kcal</strong> • <strong style="color:var(--accent);">${tp}g protein</strong>`;
         }
 
         async function deleteMeal(i) {
@@ -1582,47 +1123,56 @@
         // ============ WEIGHT ============
         async function logWeight() {
             const w = parseFloat(document.getElementById('weightInput').value);
-            if (!w || w < 20 || w > 300) { showToast('Enter valid weight'); return; }
+            if (!w || w < 20 || w > 300) { showToast('Enter a valid weight'); return; }
             weightHistory.push({ weight: w, date: today() });
             state.currentWeight = w;
             await saveWeights(weightHistory);
             await saveState(state);
             document.getElementById('weightInput').value = '';
             updateAllUI();
-            updateWeightHistory();
             showToast(`⚖️ Weight logged: ${w} kg`);
             if (navigator.vibrate) navigator.vibrate(10);
         }
 
         function updateWeightHistory() {
             const c = document.getElementById('weightHistory');
-            if (weightHistory.length === 0) { c.innerHTML =
-                    '<div style="color:var(--text-tertiary);font-size:12px;padding:10px;">No weight logs yet</div>'; return; }
-            c.innerHTML = '<div class="section-title">📋 History</div>' + weightHistory.slice().reverse().slice(0, 10).map(
-                w => `
+            if (weightHistory.length === 0) {
+                c.innerHTML = '<div style="color:var(--text-tertiary);font-size:12px;padding:10px;">No weight logs yet</div>';
+                return;
+            }
+            c.innerHTML = '<div class="section-title">📋 History</div>' +
+                weightHistory.slice().reverse().slice(0, 15).map(w => `
             <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">
-              <span>${w.date}</span><span style="font-weight:700;">${w.weight} kg</span>
-            </div>`).join('');
+              <span>${w.date}</span>
+              <span style="font-weight:700;">${w.weight} kg</span>
+            </div>
+          `).join('');
         }
 
-        // ============ COACH ============
-        function updateCoachMessages() {
-            const deficit = Math.max(0, state.calorieGoal - state.caloriesConsumed);
-            document.getElementById('coachMessages').innerHTML = [
-                { text: `Morning, ${state.name}! Your goal is <strong style="color:var(--orange);">${state.calorieGoal} kcal</strong>. Let's get those gains! 💪` },
-                { text: deficit > 0 ? `You're <strong style="color:var(--orange);">${deficit} kcal</strong> behind. A PB smoothie is 600 kcal!` :
-                        `You've hit your calorie goal! Amazing! 🎉`, action: deficit > 0 ? { l: '🥜 Log PB Smoothie',
-                        c: 600, n: '🥜 PB Smoothie' } : null },
-                { text: state.streak >= 7 ? `🔥 ${state.streak} day streak! Your consistency is building real results.` :
-                        'Consistency is key. Log 3+ meals today to build your streak.' },
-                { text: state.waterDone ? 'Great hydration! Water is crucial for recovery. 💧' :
-                        'Don\'t forget to hydrate! Water supports muscle growth.' },
-            ].map(m => `
-            <div class="coach-msg">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span>🧠</span><span style="font-weight:700;color:var(--purple);font-size:13px;">Coach Nova</span></div>
-              <div style="font-size:13px;line-height:1.5;color:var(--text-secondary);">${m.text}</div>
-              ${m.action?`<button class="coach-action" onclick="quickAdd(${m.action.c},'${m.action.n}')">${m.action.l}</button>`:''}
-            </div>`).join('');
+        // ============ PROFILE ============
+        function updateProfileScreen() {
+            const achievements = [
+                { id: 'firstMeal', name: 'First Meal Logged', icon: '🍽️', earned: state.totalMealsEver >= 1 },
+                { id: 'tenMeals', name: '10 Meals Logged', icon: '📝', earned: state.totalMealsEver >= 10 },
+                { id: 'fiftyMeals', name: '50 Meals Logged', icon: '📊', earned: state.totalMealsEver >= 50 },
+                { id: 'hundredMeals', name: '100 Meals Logged', icon: '🏆', earned: state.totalMealsEver >= 100 },
+                { id: 'streak3', name: '3 Day Streak', icon: '🔥', earned: state.streak >= 3 || state.bestStreak >= 3 },
+                { id: 'streak7', name: '7 Day Streak', icon: '💪', earned: state.streak >= 7 || state.bestStreak >= 7 },
+                { id: 'streak30', name: '30 Day Streak', icon: '👑', earned: state.streak >= 30 || state.bestStreak >= 30 },
+                { id: 'level5', name: 'Reached Level 5', icon: '⭐', earned: state.level >= 5 },
+            ];
+
+            document.getElementById('achievementsList').innerHTML = `
+            <div class="section-title">🏅 Achievements</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              ${achievements.map(a => `
+                <div class="card" style="text-align:center;padding:12px;opacity:${a.earned?'1':'0.35'};filter:${a.earned?'none':'grayscale(1)'};">
+                  <div style="font-size:28px;">${a.icon}</div>
+                  <div style="font-size:10px;font-weight:600;margin-top:4px;">${a.name}</div>
+                  <div style="font-size:9px;color:var(--text-tertiary);">${a.earned?'✅ Earned':'🔒 Locked'}</div>
+                </div>
+              `).join('')}
+            </div>`;
         }
 
         // ============ SETTINGS ============
@@ -1632,6 +1182,7 @@
             document.getElementById('settingsGoalWeight').value = state.goalWeight;
             document.getElementById('settingsSheet').classList.add('show');
         }
+
         async function saveSettings() {
             const c = parseInt(document.getElementById('settingsCals').value);
             const p = parseInt(document.getElementById('settingsProtein').value);
@@ -1644,16 +1195,18 @@
             updateAllUI();
             showToast('⚙️ Settings saved!');
         }
+
         async function resetAllData() {
-            if (confirm('Delete ALL data?')) {
+            if (confirm('Delete ALL data? This cannot be undone.')) {
                 state = { ...defaultState, onboardingComplete: true, lastActiveDate: today() };
                 todaysMeals = [];
                 weightHistory = [];
+                savedMeals = [];
                 await saveState(state);
                 await saveMeals([]);
                 await saveWeights([]);
                 updateAllUI();
-                updateWeightHistory();
+                renderSavedMeals();
                 showToast('🗑️ All data reset');
             }
         }
@@ -1666,9 +1219,7 @@
             t.className = 'toast';
             t.textContent = msg;
             c.appendChild(t);
-            setTimeout(() => { t.style.opacity = '0';
-                t.style.transition = 'opacity 0.3s';
-                setTimeout(() => t.remove(), 300); }, 2000);
+            setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.3s'; setTimeout(() => t.remove(), 300); }, 2000);
         }
 
         function spawnConfetti() {
@@ -1689,38 +1240,12 @@
             }
         }
 
-        // ============ INSTALL ============
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBanner').classList.add('show'); });
-
-        function installApp() {
-            if (deferredPrompt) { deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(() => { deferredPrompt = null;
-                    document.getElementById('installBanner').classList.remove('show'); }); } else showToast(
-                '📲 Open in Safari → Share → Add to Home Screen');
-        }
-
-        function checkInstallBanner() {
-            if (window.matchMedia('(display-mode: standalone)').matches) document.getElementById('installBanner').classList
-                .remove('show');
-        }
-
-        // ============ SERVICE WORKER ============
-        if ('serviceWorker' in navigator) {
-            const swBlob = new Blob([
-                `self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>{e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)))})`
-            ], { type: 'application/javascript' });
-            navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
-        }
-
-        // ============ KEYBOARD ============
+        // ============ KEYBOARD SHORTCUTS ============
         document.addEventListener('keydown', (e) => {
             if (e.key === '1') navTo('homeScreen', document.querySelector('[data-screen="homeScreen"]'));
             if (e.key === '2') navTo('foodScreen', document.querySelector('[data-screen="foodScreen"]'));
             if (e.key === '3') navTo('progressScreen', document.querySelector('[data-screen="progressScreen"]'));
-            if (e.key === '4') navTo('coachScreen', document.querySelector('[data-screen="coachScreen"]'));
+            if (e.key === '4') navTo('profileScreen', document.querySelector('[data-screen="profileScreen"]'));
             if (e.key === 'a') quickAdd(500);
             if (e.key === 'w') toggleWater();
         });
